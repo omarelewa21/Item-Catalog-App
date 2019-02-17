@@ -43,42 +43,42 @@ cable1 = SectionItem(
     name='Remax',
     price='$3.99',
     description='AUX Metal Cable - 3.5mm - 100Cm Male To Male',
-    image_url='img/cables/cable1',
+    image_url='img/cables/cable1.jpg',
     category=cables
     )
 cable2 = SectionItem(
     name='Tronsmart',
     price='$9.99',
     description='Micro USB Cable - Black - 3 Pcs',
-    image_url='img/cables/cable2',
+    image_url='img/cables/cable2.jpg',
     category=cables
     )
 cable3 = SectionItem(
     name='Anker',
     price='$8.99',
     description='Powerline Micro USB 90 Cm - Black',
-    image_url='img/cables/cable3',
+    image_url='img/cables/cable3.jpg',
     category=cables
     )
 cable4 = SectionItem(
     name='Generic',
     price='$4.99',
     description='Cable Data And Charger USB For The C Mobile',
-    image_url='img/cables/cable4',
+    image_url='img/cables/cable4.jpg',
     category=cables
     )
 cable5 = SectionItem(
     name='Fashion',
     price='$4.99',
     description='3-IN-1 Quick Charger & Data Universal Cable - Silver',
-    image_url='img/cables/cable5',
+    image_url='img/cables/cable5.jpg',
     category=cables
     )
 cable6 = SectionItem(
     name='YK-S07',
     price='$11.99',
     description='YK-S07 Mobile Phone Cable - 1 M',
-    image_url='img/cables/cable6',
+    image_url='img/cables/cable6.jpg',
     category=cables
     )
 

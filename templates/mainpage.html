@@ -1,0 +1,25 @@
+<html>
+    <body>
+        <h1>Mobily Store</h1>
+    </br>
+        {% for item in mobile_items %}
+        {{item.name}}
+    </br>
+        {%endfor%}
+    </br>
+        {% for item in PC_items %}
+        {{item.name}}
+    </br>
+        {%endfor%}
+    </br>  
+        {% for i in all_cables %}
+        <div>
+            <img src="{{i.image_url}}" alt="cable img">
+            <p> {{i.description}} </p>
+            <p> {{i.price}} </p>
+    </br>
+        </div>
+        {%endfor%}
+        
+    </body>
+</html>
