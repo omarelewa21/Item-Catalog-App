@@ -1,0 +1,36 @@
+<html>
+    <head>
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/itemdetail.css') }}">
+    </head>
+    
+    <body>
+        <div class="pane">
+
+            <div class="header">
+                <h1>Mobily Store</h1>
+            </div>
+        </br>
+            <div class="element">
+                <h2> {{item.name}} </h2>
+            </br>
+            <div class="image">
+                {% if item.image_url[0:4]=='http' %}
+                <img src={{item.image_url}}>
+                {% else %}
+                <img src="{{ url_for('static', filename=item.image_url) }}" alt="{{item.name}} image"></a>
+                {% endif %}  
+            </div>
+            </br>
+                <h4>{{item.description}}</h4>
+            </br>
+                <h4> {{item.price}} </h4>
+            </div>
+        </br>
+        </br>
+            <div class="processing">
+                <p> <a href=" {{url_for('edit_item', item_id=item.id)}}">Edit Item</a></p>
+                <p> <a href=" {{url_for('delete_item', item_id=item.id)}}">Delete Item</a></p>
+            </div>
+        </div>
+    </body>
+</html>

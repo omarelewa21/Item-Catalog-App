@@ -24,6 +24,15 @@ class AccessorySection(Base):
     store_id = Column(Integer, ForeignKey('Accessory.id'))
     accessory = relationship(Accessory)
 
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'name': self.name,
+            'id': self.id,
+            'store_id': self.store_id
+        }
+
 
 class SectionItem(Base):
     # Driven from Acessory section making branch from it
@@ -36,6 +45,18 @@ class SectionItem(Base):
     image_url = Column(String(250))
     store_id = Column(Integer, ForeignKey('Accessory-Section.id'))
     category = relationship(AccessorySection)
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'name': self.name,
+            'id': self.id,
+            'price': self.price,
+            'description': self.description,
+            'image_url': self.image_url,
+            'store_id': self.store_id
+        }
 
 
 engine = create_engine('sqlite:///mobilystore.db')

@@ -1,0 +1,58 @@
+body {
+    width: 100%;
+    font-family: sans-serif;
+    background-color: #0d0d0e;
+}
+
+.pane {
+    width: 90%;
+    height: 100%;
+    position: relative;
+    left: 5%;
+    border: 2px solid;
+    border-radius: 25px;
+    padding: 5px;
+    border-color: #999999;
+    background-color: #130036
+}
+
+.header {
+    left: 50%;
+    text-align: center;
+}
+
+h1 {
+    color: #e9dddd;
+    font-family: 'georgia', serif;
+    margin: 0;
+    border-bottom: 2px solid #eee;
+}
+
+.element {
+    width: 60%;
+    margin: auto;
+    background-color: aliceblue;
+    border-radius: 5%;
+}
+
+h2,
+h4 {
+    margin: auto;
+    text-align: center;
+}
+
+img {
+    width: 40%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+.processing {
+    text-align: center;
+}
+
+a {
+    color: rgb(251, 255, 0);
+    text-decoration: none;
+}
