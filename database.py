@@ -8,6 +8,7 @@ Base = declarative_base()
 
 
 class User(Base):
+    # Stores different users info
     __tablename__ = 'user'
 
     id = Column(Integer, primary_key=True)

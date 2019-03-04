@@ -4,6 +4,7 @@
     </head>
     
     <body>
+        <!-- Header contains Title and log in/out button -->
         <div class="pane">
             <div class="top">
                 <div class="header">
@@ -17,6 +18,7 @@
             </div>
         </br>
 
+            <!-- Content of page (Navigation bar and sample of store items) -->
             <div class="content">
                 <div class="mob-content">
                     <div class="navigate">
@@ -34,6 +36,7 @@
                         {%endfor%}
                     </div>
 
+                    <!-- Reloading one item from each category -->
                     {% for i in range(0,1) %}
                     <div class="products">
                         <a href=" {{url_for('itemdetail', item_id=all_cables[i].id)}} ">
@@ -80,6 +83,7 @@
                         {%endfor%}
                     </div>     
                 
+                    <!-- Reloading one item from each category -->
                     {% for i in range(0,1) %}
                     <div class="products"> 
                         <a href=" {{url_for('itemdetail', item_id=all_mouses[i].id)}} ">

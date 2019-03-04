@@ -19,7 +19,7 @@ app = Flask(__name__)
 
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
-APPLICATION_NAME = "Restaurant Menu Application"
+APPLICATION_NAME = "Item Catalog Application"
 
 engine = create_engine('sqlite:///mobilystore.db')
 Base.metadata.bind = engine
@@ -132,9 +132,8 @@ def gconnect():
     print "done!"
     return output
 
-    # DISCONNECT - Revoke a current user's token and reset their login_session
 
-
+# DISCONNECT - Revoke a current user's token and reset their login_session
 @app.route('/gdisconnect')
 def gdisconnect():
     access_token = login_session.get('access_token')
@@ -177,6 +176,7 @@ def gdisconnect():
 
 
 def createUser(login_session):
+    # Store user in the database
     newUser = User(name=login_session['username'], email=login_session[
                 'email'], picture=login_session['picture'])
     session.add(newUser)
@@ -186,11 +186,13 @@ def createUser(login_session):
 
 
 def getUserInfo(user_id):
+    # return user info
     user = session.query(User).filter_by(id=user_id).one()
     return user
 
 
 def getUserID(email):
+    # return user ID
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
@@ -231,7 +233,7 @@ def mobilystore():
     all_drivers = session.query(SectionItem).filter(
         SectionItem.store_id == 6).all()
 
-    if 'username' not in login_session: 
+    if 'username' not in login_session:
         return render_template(
             'mainpage_notLoggedin.html', mobile_items=mobile_items,
             PC_items=PC_items, all_cables=all_cables,
