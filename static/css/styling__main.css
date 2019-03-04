@@ -15,16 +15,34 @@ body {
     background-color: #130036
 }
 
+.top {
+    border-bottom: 2px solid #eee;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
 .header {
-    left: 50%;
-    text-align: center;
+    width: 80%;
 }
 
 h1 {
+    width: 40%;
+    position: relative;
+    left: 50%;
     color: #e9dddd;
     font-family: 'georgia', serif;
-    margin: 0;
-    border-bottom: 2px solid #eee;
+    margin: 1%;
+}
+
+.login {
+    width: 20%;
+    color: aliceblue;
+    text-align: center;
+}
+
+.login-img {
+    width: 20%;
 }
 
 .content,

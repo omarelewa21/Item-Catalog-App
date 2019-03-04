@@ -7,12 +7,23 @@ from sqlalchemy import create_engine
 Base = declarative_base()
 
 
+class User(Base):
+    __tablename__ = 'user'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    email = Column(String(250), nullable=False)
+    picture = Column(String(250))
+
+
 class Accessory(Base):
     # Store contains accessory items for varies products
     __tablename__ = 'Accessory'
 
     name = Column(String(50), nullable=False)
     id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship(User)
 
 
 class AccessorySection(Base):
@@ -23,6 +34,8 @@ class AccessorySection(Base):
     id = Column(Integer, primary_key=True)
     store_id = Column(Integer, ForeignKey('Accessory.id'))
     accessory = relationship(Accessory)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship(User)
 
     @property
     def serialize(self):
@@ -45,6 +58,8 @@ class SectionItem(Base):
     image_url = Column(String(250))
     store_id = Column(Integer, ForeignKey('Accessory-Section.id'))
     category = relationship(AccessorySection)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship(User)
 
     @property
     def serialize(self):
