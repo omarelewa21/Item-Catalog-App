@@ -13,7 +13,9 @@
             <div class="element">
                 <h2> {{item.name}} </h2>
             </br>
+            
             <div class="image">
+                <!-- Checking whether the image url is a full web uri or a local stored image -->
                 {% if item.image_url[0:4]=='http' %}
                 <img src={{item.image_url}}>
                 {% else %}
@@ -28,6 +30,7 @@
         </br>
         </br>
             <div class="processing">
+                <!-- Links for editing or deleting the the item -->
                 <p> <a href=" {{url_for('edit_item', item_id=item.id)}}">Edit Item</a></p>
                 <p> <a href=" {{url_for('delete_item', item_id=item.id)}}">Delete Item</a></p>
             </div>

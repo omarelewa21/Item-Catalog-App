@@ -4,6 +4,7 @@ body {
     background-color: #0d0d0e;
 }
 
+/* Boxing rhe content of the page */
 .pane {
     width: 90%;
     margin: auto;
@@ -14,6 +15,7 @@ body {
     background-color: #130036
 }
 
+/* Styling the header */
 .header {
     left: 50%;
     text-align: center;
@@ -26,6 +28,7 @@ h1 {
     border-bottom: 2px solid #eee;
 }
 
+/* Styling the content */
 p {
     color: #cccccc;
 }

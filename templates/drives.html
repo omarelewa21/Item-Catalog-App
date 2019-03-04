@@ -10,6 +10,7 @@
                 <h1>Mobily Store</h1>
             </div>
             </br>
+            <!-- A pop message appears when adding new item -->
             <div class="flash">
                 {% with messages = get_flashed_messages() %}
                     {% if messages %}
@@ -56,6 +57,7 @@
                         </div>
                     </div>
                 </br>
+                <!-- Reloading all the driver items in database -->
                 <div class="all-products">
                     {% for item in all_drivers %}
                     <div class="products">
