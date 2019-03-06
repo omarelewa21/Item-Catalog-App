@@ -24,13 +24,13 @@
                     <div class="navigate">
                         {% for item in mobile_items %}
                             {% if item.name == 'Cables' %}
-                            <p><a href=" {{url_for('cables_store')}} ">{{item.name}}</a></p>
+                            <p><a href=" {{url_for('category_store', category_id=1)}} ">{{item.name}}</a></p>
                         </br>
                             {% elif item.name == 'Chargers' %}
-                            <p><a href=" {{url_for('chargers_store')}} ">{{item.name}}</a></p>
+                            <p><a href=" {{url_for('category_store', category_id=2)}} ">{{item.name}}</a></p>
                         </br>
                             {% elif item.name == 'Headsets' %}
-                            <p><a href=" {{url_for('headsets_store')}} ">{{item.name}}</a></p>
+                            <p><a href=" {{url_for('category_store', category_id=3)}} ">{{item.name}}</a></p>
                         </br>
                             {%endif%}
                         {%endfor%}
@@ -71,13 +71,13 @@
                     <div class="navigate"> 
                         {% for item in PC_items %}
                             {% if item.name == 'Mouses' %}
-                            <p><a href=" {{url_for('mouses_store')}} ">{{item.name}}</a></p>
+                            <p><a href=" {{url_for('category_store', category_id=4)}} ">{{item.name}}</a></p>
                         </br>
                             {% elif item.name == 'Keyboards' %}
-                            <p><a href=" {{url_for('keyboards_store')}} ">{{item.name}}</a></p>
+                            <p><a href=" {{url_for('category_store', category_id=5)}} ">{{item.name}}</a></p>
                         </br>
                             {% elif item.name == 'Flash Drivers'  %}
-                            <p><a href=" {{url_for('drives_store')}} ">{{item.name}}</a></p>
+                            <p><a href=" {{url_for('category_store', category_id=6)}} ">{{item.name}}</a></p>
                         </br>
                             {%endif%}
                         {%endfor%}

@@ -27,9 +27,9 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
-# Login page
 @app.route('/login')
 def showlogin():
+    # Login page
     state = ''.join(
         random.choice(string.ascii_uppercase + string.digits)
         for x in range(32)
@@ -202,24 +202,35 @@ def getUserID(email):
 
 @app.route('/mobily/categories/json')
 def categoriesJson():
+    # Jsonify all the category sections in database
     category = session.query(AccessorySection).all()
     return jsonify(categories=[i.serialize for i in category])
 
 
 @app.route('/mobily/<int:category_id>/items/json')
 def itemJson(category_id):
+    # Jsonify all the items in a category sections
     item = session.query(SectionItem).filter_by(store_id=category_id).all()
     return jsonify(items=[i.serialize for i in item])
+
+
+@app.route('/mobily/<int:item_id>/itemdetail/json')
+def itemdetailjson(item_id):
+    # Jsonify the details specfic for one item
+    item = session.query(SectionItem).filter_by(id=item_id).one()
+    return jsonify(item_details=item.serialize)
 
 
 @app.route('/')
 @app.route('/mobily')
 def mobilystore():
+    # Main page for the Mobily Store
     mobile_items = session.query(AccessorySection).filter(
         AccessorySection.store_id == 1).all()
     PC_items = session.query(AccessorySection).filter(
         AccessorySection.store_id == 2).all()
-
+    # Storing each cateogry items in a variable
+    # In order to render an item from each category on the page
     all_cables = session.query(SectionItem).filter(
         SectionItem.store_id == 1).all()
     all_chargers = session.query(SectionItem).filter(
@@ -232,8 +243,9 @@ def mobilystore():
         SectionItem.store_id == 5).all()
     all_drivers = session.query(SectionItem).filter(
         SectionItem.store_id == 6).all()
-
+    # Checking if the user is logged in or not
     if 'username' not in login_session:
+        # rendering page contains a login button
         return render_template(
             'mainpage_notLoggedin.html', mobile_items=mobile_items,
             PC_items=PC_items, all_cables=all_cables,
@@ -241,6 +253,7 @@ def mobilystore():
             all_mouses=all_mouses, all_keyboards=all_keyboards,
             all_drivers=all_drivers)
     else:
+        # rendering page contains a logout button
         return render_template(
             'mainpage_Loggedin.html', mobile_items=mobile_items,
             PC_items=PC_items, all_cables=all_cables,
@@ -249,16 +262,38 @@ def mobilystore():
             all_drivers=all_drivers)
 
 
-@app.route('/mobily/<int:item_id>')
+@app.route('/mobily/category/<int:category_id>')
+def category_store(category_id):
+    # Display a navigation bar as the same of the main page
+    # Dispaly all items specific to one category 
+    mobile_items = session.query(AccessorySection).filter(
+        AccessorySection.store_id == 1).all()
+    PC_items = session.query(AccessorySection).filter(
+        AccessorySection.store_id == 2).all()
+    # Refer to Cateogry ID by store_id to obtain all items for that category
+    category_items = session.query(SectionItem).filter_by(
+        store_id=category_id)
+
+    return render_template(
+        'category.html', category_items=category_items,
+        mobile_items=mobile_items, PC_items=PC_items,
+        store__id=category_id)
+
+
+@app.route('/mobily/item/<int:item_id>')
 def itemdetail(item_id):
+    # Display item information
     item = session.query(SectionItem).filter_by(id=item_id).one()
     return render_template('itemdetail.html', item=item)
 
 
-@app.route('/mobily/new/<int:store__id>', methods=['GET', 'POST'])
+@app.route('/mobily/<int:store__id>/newitem', methods=['GET', 'POST'])
 def newItem(store__id):
+    # Renders a form to insert a new item
     if 'username' not in login_session:
+        # Checks if the user is logged in to enable the feature
         return redirect('/login')
+    user = session.query(User).filter_by(email=login_session['email']).one()
     if request.method == 'POST':
         newItem = SectionItem(
             name=request.form['name'],
@@ -266,35 +301,30 @@ def newItem(store__id):
             price=request.form['price'],
             description=request.form['description'],
             image_url=request.form['image_url'],
-            user_id=login_session['user_id']
+            user_id=user.id
         )
         session.add(newItem)
         session.commit()
         # Flash message
         flash("New Item Created")
-        # return to previous page
-        if store__id == 1:
-            return redirect(url_for('cables_store'))
-        elif store__id == 2:
-            return redirect(url_for('chargers_store'))
-        elif store__id == 3:
-            return redirect(url_for('headsets_store'))
-        elif store__id == 4:
-            return redirect(url_for('mouses_store'))
-        elif store__id == 5:
-            return redirect(url_for('keyboards_store'))
-        elif store__id == 6:
-            return redirect(url_for('drives_store'))
-
+        # redirect to the previous category page
+        return redirect(url_for('category_store', category_id=store__id))
     else:
         return render_template('newitem.html', store__id=store__id)
 
 
 @app.route('/mobily/<int:item_id>/edit', methods=['GET', 'POST'])
 def edit_item(item_id):
+    # Renders a a form to edit an item
     if 'username' not in login_session:
+        # Checks if the user is logged in to enable the feature
         return redirect('/login')
     item = session.query(SectionItem).filter_by(id=item_id).one()
+    user = session.query(User).filter_by(id=item.user_id).one()
+    # Checks if the user is created the item to delete it
+    # if not returns not authoraized
+    if user.email != login_session['email']:
+        return "Not authorized to edit this item"
     if request.method == 'POST':
         item.name = request.form['name']
         item.price = request.form['price']
@@ -309,93 +339,22 @@ def edit_item(item_id):
 
 @app.route('/mobily/<int:item_id>/delete', methods=['GET', 'POST'])
 def delete_item(item_id):
+    # Renders two buttons, one for deleting an item and another for cancelling
     if 'username' not in login_session:
+        # Checks if the user is logged in to enable the feature
         return redirect('/login')
     item = session.query(SectionItem).filter_by(id=item_id).one()
+    user = session.query(User).filter_by(id=item.user_id).one()
+    # Checks if the user is created the item to delete it
+    # if not returns not authoraized
+    if user.email != login_session['email']:
+        return "Not authorized to edit this item"
     if request.method == 'POST':
         session.delete(item)
         session.commit()
         return redirect(url_for('mobilystore'))
     else:
         return render_template('deleteitem.html', item=item)
-
-
-@app.route('/mobily/cables')
-def cables_store():
-    mobile_items = session.query(AccessorySection).filter(
-        AccessorySection.store_id == 1).all()
-    PC_items = session.query(AccessorySection).filter(
-        AccessorySection.store_id == 2).all()
-    all_cables = session.query(SectionItem).filter(
-        SectionItem.store_id == 1).all()
-    return render_template(
-        'cables.html', all_cables=all_cables,
-        mobile_items=mobile_items, PC_items=PC_items)
-
-
-@app.route('/mobily/chargers')
-def chargers_store():
-    mobile_items = session.query(AccessorySection).filter(
-        AccessorySection.store_id == 1).all()
-    PC_items = session.query(AccessorySection).filter(
-        AccessorySection.store_id == 2).all()
-    all_chargers = session.query(SectionItem).filter(
-        SectionItem.store_id == 2).all()
-    return render_template(
-        'chargers.html', all_chargers=all_chargers,
-        mobile_items=mobile_items, PC_items=PC_items)
-
-
-@app.route('/mobily/headsets')
-def headsets_store():
-    mobile_items = session.query(AccessorySection).filter(
-        AccessorySection.store_id == 1).all()
-    PC_items = session.query(AccessorySection).filter(
-        AccessorySection.store_id == 2).all()
-    all_headsets = session.query(SectionItem).filter(
-        SectionItem.store_id == 3).all()
-    return render_template(
-        'headsets.html', all_headsets=all_headsets,
-        mobile_items=mobile_items, PC_items=PC_items)
-
-
-@app.route('/mobily/mouses')
-def mouses_store():
-    mobile_items = session.query(AccessorySection).filter(
-        AccessorySection.store_id == 1).all()
-    PC_items = session.query(AccessorySection).filter(
-        AccessorySection.store_id == 2).all()
-    all_mouses = session.query(SectionItem).filter(
-        SectionItem.store_id == 4).all()
-    return render_template(
-        'mouses.html', all_mouses=all_mouses,
-        mobile_items=mobile_items, PC_items=PC_items)
-
-
-@app.route('/mobily/keyboards')
-def keyboards_store():
-    mobile_items = session.query(AccessorySection).filter(
-        AccessorySection.store_id == 1).all()
-    PC_items = session.query(AccessorySection).filter(
-        AccessorySection.store_id == 2).all()
-    all_keyboards = session.query(SectionItem).filter(
-        SectionItem.store_id == 5).all()
-    return render_template(
-        'keyboards.html', all_keyboards=all_keyboards,
-        mobile_items=mobile_items, PC_items=PC_items)
-
-
-@app.route('/mobily/drives')
-def drives_store():
-    mobile_items = session.query(AccessorySection).filter(
-        AccessorySection.store_id == 1).all()
-    PC_items = session.query(AccessorySection).filter(
-        AccessorySection.store_id == 2).all()
-    all_drivers = session.query(SectionItem).filter(
-        SectionItem.store_id == 6).all()
-    return render_template(
-        'drives.html', all_drivers=all_drivers,
-        mobile_items=mobile_items, PC_items=PC_items)
 
 
 if __name__ == '__main__':

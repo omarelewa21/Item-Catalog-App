@@ -31,6 +31,7 @@ $ python data_creation.py
 ```
 $ python project.py
 ```
+* Create a Client ID through making an 
 
 ##### Quick demo to the code files. 
 * database.py file: Contains Classes used to create the databse. 

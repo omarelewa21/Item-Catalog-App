@@ -29,13 +29,13 @@
                     <div class="navigate">
                         {% for item in mobile_items %}
                             {% if item.name == 'Cables' %}
-                            <p><a href=" {{url_for('cables_store')}} ">{{item.name}}</a></p>
+                            <p><a href=" {{url_for('category_store', category_id=1)}} ">{{item.name}}</a></p>
                         </br>
                             {% elif item.name == 'Chargers' %}
-                            <p><a href=" {{url_for('chargers_store')}} ">{{item.name}}</a></p>
+                            <p><a href=" {{url_for('category_store', category_id=2)}} ">{{item.name}}</a></p>
                         </br>
                             {% elif item.name == 'Headsets' %}
-                            <p><a href=" {{url_for('headsets_store')}} ">{{item.name}}</a></p>
+                            <p><a href=" {{url_for('category_store', category_id=3)}} ">{{item.name}}</a></p>
                         </br>
                             {%endif%}
                         {%endfor%}
@@ -44,38 +44,39 @@
                     <div class="navigate"> 
                         {% for item in PC_items %}
                             {% if item.name == 'Mouses' %}
-                            <p><a href=" {{url_for('mouses_store')}} ">{{item.name}}</a></p>
+                            <p><a href=" {{url_for('category_store', category_id=4)}} ">{{item.name}}</a></p>
                         </br>
                             {% elif item.name == 'Keyboards' %}
-                            <p><a href=" {{url_for('keyboards_store')}} ">{{item.name}}</a></p>
+                            <p><a href=" {{url_for('category_store', category_id=5)}} ">{{item.name}}</a></p>
                         </br>
                             {% elif item.name == 'Flash Drivers'  %}
-                            <p><a href=" {{url_for('drives_store')}} ">{{item.name}}</a></p>
+                            <p><a href=" {{url_for('category_store', category_id=6)}} ">{{item.name}}</a></p>
                         </br>
                             {%endif%}
                         {%endfor%}
                         </div>
                     </div>
                 </br>
-                <!-- Reloading all the headset items in database -->
+                <!-- Reloading all the cable items in database -->
                 <div class="all-products">
-                    {% for item in all_headsets %}
+                    {% for item in category_items %}
                     <div class="products">
                         <a href="{{url_for('itemdetail', item_id=item.id)}}">
                             {% if item.image_url[0:4]=='http' %}
                             <img src={{item.image_url}}>
                             {% else %}
                             <img src="{{ url_for('static', filename=item.image_url) }}" alt="{{item.name}} image"></a>
-                            {% endif %}                          <p> {{item.description}} </p>
+                            {% endif %}
+                        <p> {{item.description}} </p>
                         <p> {{item.price}} </p>
                         </br>
                     </div>
                     {% endfor %}
                 </div>
             </div>
-
+            
             <div class="add-item">
-                <a class="add-tag" href=" {{url_for('newItem', store__id=3)}} "> Add New Item </a>
+                <a class="add-tag" href=" {{url_for('newItem', store__id=store__id)}} "> Add New Item </a>
             </div>
         </div>
     </body>
