@@ -31,13 +31,13 @@ $ python data_creation.py
 ```
 $ python project.py
 ```
-* Open you localhost in your browser at port 5000 --> http://localhost:5000/
+* Open you localhost in your browser at port 5000 --> localhost:5000
 
 ##### Json endpoints: 
 If you need to observe the data in a json format, you can access links as following: 
-**localhost:5000/mobily/categories/json** : Obtaining the data for all categories in accessory sections.
-**http://localhost:5000/mobily/-number between 1 and 6-/items/json** : Obtaining all items stored in a particular category section. 
-**http://localhost:5000/mobily/-number between 1 and 31 -/itemdetail/json** : obtaining all the information specified for an item in a particular category.
+* **localhost:5000/mobily/categories/json** : Obtaining the data for all categories in accessory sections.
+* **localhost:5000/mobily/-number between 1 and 6-/items/json** : Obtaining all items stored in a particular category section. 
+* **localhost:5000/mobily/-number between 1 and 31 -/itemdetail/json** : obtaining all the information specified for an item in a particular category.
 
 
 ### Quick demo to the code files. 
