@@ -293,7 +293,7 @@ def newItem(store__id):
     if 'username' not in login_session:
         # Checks if the user is logged in to enable the feature
         return redirect('/login')
-    user = session.query(User).filter_by(email=login_session['email']).one()
+
     if request.method == 'POST':
         newItem = SectionItem(
             name=request.form['name'],
@@ -301,7 +301,7 @@ def newItem(store__id):
             price=request.form['price'],
             description=request.form['description'],
             image_url=request.form['image_url'],
-            user_id=user.id
+            user_id=getUserID(login_session['email'])
         )
         session.add(newItem)
         session.commit()

@@ -1,6 +1,6 @@
 <html>
     <head>
-        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/category.css')}}">
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/categoryi.css')}}">
     </head>
 
     <body>
@@ -8,6 +8,10 @@
 
             <div class="header">
                 <h1>Mobily Store</h1>
+            </div>
+            </br>
+            <div class="add-item">
+                <a class="add-tag" href=" {{url_for('newItem', store__id=store__id)}} "> Add New Item </a>
             </div>
             </br>
             <!-- A pop message appears when adding new item -->
@@ -73,10 +77,6 @@
                     </div>
                     {% endfor %}
                 </div>
-            </div>
-            
-            <div class="add-item">
-                <a class="add-tag" href=" {{url_for('newItem', store__id=store__id)}} "> Add New Item </a>
             </div>
         </div>
     </body>

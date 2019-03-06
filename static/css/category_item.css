@@ -18,7 +18,6 @@ body {
 
 /* Styling the header */
 .header {
-    left: 50%;
     text-align: center;
 }
 
@@ -64,13 +63,13 @@ a {
 }
 
 .add-item {
-    position: relative;
-    left: 50%;
+    text-align: center;
+    background-color: black;
 }
 
 .add-tag {
-    text-decoration: underline;
-    color: antiquewhite
+    color: antiquewhite;
+    font-size: larger;
 }
 
 .flash {
@@ -83,3 +82,6 @@ img {
     border-radius: 5%;
 }
 
+#signinButton {
+    text-align: center;
+}
