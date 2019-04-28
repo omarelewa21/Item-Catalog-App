@@ -1,9 +1,8 @@
 from flask import Flask, render_template, request, redirect
 from flask import url_for, flash, jsonify
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from database import Base
 from database import Accessory, AccessorySection, SectionItem, User
+from database import db
+import psycopg2
 # Imports for security features
 from flask import session as login_session
 import random
@@ -20,11 +19,6 @@ app = Flask(__name__)
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Item Catalog Application"
-
-engine = create_engine('sqlite:///mobilystore.db')
-Base.metadata.bind = engine
-DBSession = sessionmaker(bind=engine)
-session = DBSession()
 
 
 @app.route('/login')
@@ -179,22 +173,22 @@ def createUser(login_session):
     # Store user in the database
     newUser = User(name=login_session['username'], email=login_session[
                 'email'], picture=login_session['picture'])
-    session.add(newUser)
-    session.commit()
-    user = session.query(User).filter_by(email=login_session['email']).one()
+    db.session.add(newUser)
+    db.session.commit()
+    user = User.query.filter_by(email=login_session['email']).one()
     return user.id
 
 
 def getUserInfo(user_id):
     # return user info
-    user = session.query(User).filter_by(id=user_id).one()
+    user = User.query.filter_by(id=user_id).one()
     return user
 
 
 def getUserID(email):
     # return user ID
     try:
-        user = session.query(User).filter_by(email=email).one()
+        user = User.query.filter_by(email=email).one()
         return user.id
     except:
         return None
@@ -203,21 +197,21 @@ def getUserID(email):
 @app.route('/mobily/categories/json')
 def categoriesJson():
     # Jsonify all the category sections in database
-    category = session.query(AccessorySection).all()
+    category = AccessorySection.query.all()
     return jsonify(categories=[i.serialize for i in category])
 
 
 @app.route('/mobily/<int:category_id>/items/json')
 def itemJson(category_id):
     # Jsonify all the items in a category sections
-    item = session.query(SectionItem).filter_by(store_id=category_id).all()
+    item = SectionItem.query.filter_by(store_id=category_id).all()
     return jsonify(items=[i.serialize for i in item])
 
 
 @app.route('/mobily/<int:item_id>/itemdetail/json')
 def itemdetailjson(item_id):
     # Jsonify the details specfic for one item
-    item = session.query(SectionItem).filter_by(id=item_id).one()
+    item = SectionItem.query.filter_by(id=item_id).one()
     return jsonify(item_details=item.serialize)
 
 
@@ -225,23 +219,23 @@ def itemdetailjson(item_id):
 @app.route('/mobily')
 def mobilystore():
     # Main page for the Mobily Store
-    mobile_items = session.query(AccessorySection).filter(
+    mobile_items = AccessorySection.query.filter(
         AccessorySection.store_id == 1).all()
-    PC_items = session.query(AccessorySection).filter(
+    PC_items = AccessorySection.query.filter(
         AccessorySection.store_id == 2).all()
     # Storing each cateogry items in a variable
     # In order to render an item from each category on the page
-    all_cables = session.query(SectionItem).filter(
+    all_cables = SectionItem.query.filter(
         SectionItem.store_id == 1).all()
-    all_chargers = session.query(SectionItem).filter(
+    all_chargers = SectionItem.query.filter(
         SectionItem.store_id == 2).all()
-    all_headsets = session.query(SectionItem).filter(
+    all_headsets = SectionItem.query.filter(
         SectionItem.store_id == 3).all()
-    all_mouses = session.query(SectionItem).filter(
+    all_mouses = SectionItem.query.filter(
         SectionItem.store_id == 4). all()
-    all_keyboards = session.query(SectionItem).filter(
+    all_keyboards = SectionItem.query.filter(
         SectionItem.store_id == 5).all()
-    all_drivers = session.query(SectionItem).filter(
+    all_drivers = SectionItem.query.filter(
         SectionItem.store_id == 6).all()
     # Checking if the user is logged in or not
     if 'username' not in login_session:
@@ -266,12 +260,12 @@ def mobilystore():
 def category_store(category_id):
     # Display a navigation bar as the same of the main page
     # Dispaly all items specific to one category 
-    mobile_items = session.query(AccessorySection).filter(
+    mobile_items = AccessorySection.query.filter(
         AccessorySection.store_id == 1).all()
-    PC_items = session.query(AccessorySection).filter(
+    PC_items = AccessorySection.query.filter(
         AccessorySection.store_id == 2).all()
     # Refer to Cateogry ID by store_id to obtain all items for that category
-    category_items = session.query(SectionItem).filter_by(
+    category_items = SectionItem.query.filter_by(
         store_id=category_id)
 
     return render_template(
@@ -283,7 +277,7 @@ def category_store(category_id):
 @app.route('/mobily/item/<int:item_id>')
 def itemdetail(item_id):
     # Display item information
-    item = session.query(SectionItem).filter_by(id=item_id).one()
+    item = SectionItem.query.filter_by(id=item_id).one()
     return render_template('itemdetail.html', item=item)
 
 
@@ -303,8 +297,8 @@ def newItem(store__id):
             image_url=request.form['image_url'],
             user_id=getUserID(login_session['email'])
         )
-        session.add(newItem)
-        session.commit()
+        db.session.add(newItem)
+        db.session.commit()
         # Flash message
         flash("New Item Created")
         # redirect to the previous category page
@@ -319,8 +313,8 @@ def edit_item(item_id):
     if 'username' not in login_session:
         # Checks if the user is logged in to enable the feature
         return redirect('/login')
-    item = session.query(SectionItem).filter_by(id=item_id).one()
-    user = session.query(User).filter_by(id=item.user_id).one()
+    item = SectionItem.query.filter_by(id=item_id).one()
+    user = SectionItem.query.filter_by(id=item.user_id).one()
     # Checks if the user is created the item to delete it
     # if not returns not authoraized
     if user.email != login_session['email']:
@@ -343,8 +337,8 @@ def delete_item(item_id):
     if 'username' not in login_session:
         # Checks if the user is logged in to enable the feature
         return redirect('/login')
-    item = session.query(SectionItem).filter_by(id=item_id).one()
-    user = session.query(User).filter_by(id=item.user_id).one()
+    item = SectionItem.query.filter_by(id=item_id).one()
+    user = User.query.filter_by(id=item.user_id).one()
     # Checks if the user is created the item to delete it
     # if not returns not authoraized
     if user.email != login_session['email']:
@@ -358,6 +352,6 @@ def delete_item(item_id):
 
 
 if __name__ == '__main__':
-    app.secret_key = 'suoer_secret_key'
+    app.secret_key = 'super_secret_key'
     app.debug = True
     app.run(host='0.0.0.0', port=5000)

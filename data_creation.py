@@ -1,25 +1,19 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from database import Base
+from database import db
 from database import Accessory, AccessorySection, SectionItem, User
-
-engine = create_engine('sqlite:///mobilystore.db')
-Base.metadata.bind = engine
-DBSession = sessionmaker(bind=engine)
-session = DBSession()
+import psycopg2
 
 # Create dummy user
 User1 = User(name="Robo Barista", email="tinnyTim@udacity.com",
              picture='https://pbs.twimg.com/profile_images/2671170543/18debd694829ed78203a5a36dd364160_400x400.png')  # NOQA
-session.add(User1)
-session.commit()
+db.session.add(User1)
+db.session.commit()
 
 # Accessories item categories
 mobile_category = Accessory(user_id=1, name='MOBILE ACCESSORIES')
 Computer_category = Accessory(user_id=1, name='COMPUTER ACCESSORIES')
 
-session.add_all([mobile_category, Computer_category])
-session.commit()
+db.session.add_all([mobile_category, Computer_category])
+db.session.commit()
 
 # Mobile accessory items
 cables = AccessorySection(
@@ -29,8 +23,8 @@ chargers = AccessorySection(
 headsets = AccessorySection(
     user_id=1, name='Headsets', accessory=mobile_category)
 
-session.add_all([cables, chargers, headsets])
-session.commit()
+db.session.add_all([cables, chargers, headsets])
+db.session.commit()
 
 # Computer accessory items
 mouses = AccessorySection(
@@ -40,8 +34,8 @@ keyboards = AccessorySection(
 flash_drivers = AccessorySection(
     user_id=1, name='Flash Drivers', accessory=Computer_category)
 
-session.add_all([mouses, keyboards, flash_drivers])
-session.commit()
+db.session.add_all([mouses, keyboards, flash_drivers])
+db.session.commit()
 
 # Mobile Accessories
 # Cables
@@ -94,8 +88,8 @@ cable6 = SectionItem(
     category=cables
     )
 
-session.add_all([cable1, cable2, cable3, cable4, cable5, cable6])
-session.commit()
+db.session.add_all([cable1, cable2, cable3, cable4, cable5, cable6])
+db.session.commit()
 
 # Chargers
 charger1 = SectionItem(
@@ -139,8 +133,8 @@ charger5 = SectionItem(
     category=chargers
     )
 
-session.add_all([charger1, charger2, charger3, charger4, charger5])
-session.commit()
+db.session.add_all([charger1, charger2, charger3, charger4, charger5])
+db.session.commit()
 
 # Headsets
 headset1 = SectionItem(
@@ -192,8 +186,8 @@ headset6 = SectionItem(
     category=headsets
     )
 
-session.add_all([headset1, headset2, headset3, headset4, headset5, headset6])
-session.commit()
+db.session.add_all([headset1, headset2, headset3, headset4, headset5, headset6])
+db.session.commit()
 
 # PC Accessories
 # Mouses
@@ -238,8 +232,8 @@ mouse5 = SectionItem(
     category=mouses
     )
 
-session.add_all([mouse1, mouse2, mouse3, mouse4, mouse5])
-session.commit()
+db.session.add_all([mouse1, mouse2, mouse3, mouse4, mouse5])
+db.session.commit()
 
 # Keyboards
 keyboard1 = SectionItem(
@@ -275,8 +269,8 @@ keyboard4 = SectionItem(
     category=keyboards
     )
 
-session.add_all([keyboard1, keyboard2, keyboard3, keyboard4, keyboards])
-session.commit()
+db.session.add_all([keyboard1, keyboard2, keyboard3, keyboard4, keyboards])
+db.session.commit()
 
 # Flash Drivers
 drive1 = SectionItem(
@@ -321,5 +315,5 @@ drive5 = SectionItem(
     category=flash_drivers
     )
 
-session.add_all([drive1, drive2, drive3, drive4, drive5])
-session.commit()
+db.session.add_all([drive1, drive2, drive3, drive4, drive5])
+db.session.commit()

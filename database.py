@@ -1,42 +1,46 @@
-import sys
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-from sqlalchemy import create_engine
+import psycopg2
 
-Base = declarative_base()
+app = Flask(__name__)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = (
+    'postgresql://postgres:ItemStore@localhost/storecatalog')
+db = SQLAlchemy(app)
 
 
-class User(Base):
+class User(db.Model):
     # Stores different users info
     __tablename__ = 'user'
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
-    email = Column(String(250), nullable=False)
-    picture = Column(String(250))
+    id = db.Column(Integer, primary_key=True)
+    name = db.Column(String(250), nullable=False)
+    email = db.Column(String(250), nullable=False)
+    picture = db.Column(String(250))
 
 
-class Accessory(Base):
+class Accessory(db.Model):
     # Store contains accessory items for varies products
     __tablename__ = 'Accessory'
 
-    name = Column(String(50), nullable=False)
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('user.id'))
-    user = relationship(User)
+    name = db.Column(String(50), nullable=False)
+    id = db.Column(Integer, primary_key=True)
+    user_id = db.Column(Integer, ForeignKey('user.id'))
+    user = db.relationship(User)
 
 
-class AccessorySection(Base):
+class AccessorySection(db.Model):
     # Driven from the Accessory class making branches from it
     __tablename__ = 'Accessory-Section'
 
-    name = Column(String(50), nullable=False)
-    id = Column(Integer, primary_key=True)
-    store_id = Column(Integer, ForeignKey('Accessory.id'))
-    accessory = relationship(Accessory)
-    user_id = Column(Integer, ForeignKey('user.id'))
-    user = relationship(User)
+    name = db.Column(String(50), nullable=False)
+    id = db.Column(Integer, primary_key=True)
+    store_id = db.Column(Integer, ForeignKey('Accessory.id'))
+    accessory = db.relationship(Accessory)
+    user_id = db.Column(Integer, ForeignKey('user.id'))
+    user = db.relationship(User)
 
     @property
     def serialize(self):
@@ -48,19 +52,19 @@ class AccessorySection(Base):
         }
 
 
-class SectionItem(Base):
+class SectionItem(db.Model):
     # Driven from Acessory section making branch from it
     __tablename__ = 'cables'
 
-    name = Column(String(50), nullable=False)
-    id = Column(Integer, primary_key=True)
-    price = Column(String(8))
-    description = Column(String(250))
-    image_url = Column(String(250))
-    store_id = Column(Integer, ForeignKey('Accessory-Section.id'))
-    category = relationship(AccessorySection)
-    user_id = Column(Integer, ForeignKey('user.id'))
-    user = relationship(User)
+    name = db.Column(String(50), nullable=False)
+    id = db.Column(Integer, primary_key=True)
+    price = db.Column(String(8))
+    description = db.Column(String(250))
+    image_url = db.Column(String(250))
+    store_id = db.Column(Integer, ForeignKey('Accessory-Section.id'))
+    category = db.relationship(AccessorySection)
+    user_id = db.Column(Integer, ForeignKey('user.id'))
+    user = db.relationship(User)
 
     @property
     def serialize(self):
@@ -74,6 +78,4 @@ class SectionItem(Base):
             'store_id': self.store_id
         }
 
-
-engine = create_engine('sqlite:///mobilystore.db')
-Base.metadata.create_all(engine)
+db.create_all()
