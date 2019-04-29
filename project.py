@@ -324,8 +324,8 @@ def edit_item(item_id):
         item.price = request.form['price']
         item.description = request.form['description']
         item.image_url = request.form['image_url']
-        session.add(item)
-        session.commit()
+        db.session.add(item)
+        db.session.commit()
         return redirect(url_for('itemdetail', item_id=item.id))
     else:
         return render_template('edititem.html', item=item)
@@ -344,8 +344,8 @@ def delete_item(item_id):
     if user.email != login_session['email']:
         return "Not authorized to edit this item"
     if request.method == 'POST':
-        session.delete(item)
-        session.commit()
+        db.session.delete(item)
+        db.session.commit()
         return redirect(url_for('mobilystore'))
     else:
         return render_template('deleteitem.html', item=item)
