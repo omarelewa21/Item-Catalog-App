@@ -20,7 +20,6 @@ import requests
 app = app
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
-APPLICATION_ID = "item-catalog-app-233215"
 
 
 @app.route('/login')
