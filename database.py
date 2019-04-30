@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 import psycopg2
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = (
     'postgresql://postgres:ItemStore@localhost/storecatalog')
 db = SQLAlchemy(app)

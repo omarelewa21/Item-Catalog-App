@@ -1,7 +1,7 @@
 #!/usr/bin/python
-import sys
-import logging
-logging.basicConfig(stream=sys.stderr)
-sys.path.insert(0, "/var/www/Item-Catalog-App")
+from project import app
+from flask import Flask
 
-from Item-Catalog-App import project as application
+app.debug = True
+app.secret_key = 'super_secret_key'
+app.run(host='0.0.0.0', port=5000)

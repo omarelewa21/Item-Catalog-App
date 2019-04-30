@@ -1,7 +1,10 @@
+#!/bin/sh
+import os
+import sys
 from flask import Flask, render_template, request, redirect
 from flask import url_for, flash, jsonify
 from database import Accessory, AccessorySection, SectionItem, User
-from database import db
+from database import db, app
 import psycopg2
 # Imports for security features
 from flask import session as login_session
@@ -14,11 +17,10 @@ import json
 from flask import make_response
 import requests
 
-app = Flask(__name__)
-
+app = app
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
-APPLICATION_NAME = "Item Catalog Application"
+APPLICATION_ID = "item-catalog-app-233215"
 
 
 @app.route('/login')
@@ -259,7 +261,7 @@ def mobilystore():
 @app.route('/mobily/category/<int:category_id>')
 def category_store(category_id):
     # Display a navigation bar as the same of the main page
-    # Dispaly all items specific to one category 
+    # Dispaly all items specific to one category
     mobile_items = AccessorySection.query.filter(
         AccessorySection.store_id == 1).all()
     PC_items = AccessorySection.query.filter(
@@ -349,9 +351,3 @@ def delete_item(item_id):
         return redirect(url_for('mobilystore'))
     else:
         return render_template('deleteitem.html', item=item)
-
-
-if __name__ == '__main__':
-    app.secret_key = 'super_secret_key'
-    app.debug = True
-    app.run(host='0.0.0.0', port=5000)
