@@ -351,3 +351,6 @@ def delete_item(item_id):
         return redirect(url_for('mobilystore'))
     else:
         return render_template('deleteitem.html', item=item)
+
+app.debug = True
+app.secret_key = 'super_secret_key'
